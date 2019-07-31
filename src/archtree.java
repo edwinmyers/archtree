@@ -1,11 +1,12 @@
 import java.io.IOException;
-
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.io.File;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.impl.FileVolumeManager;
 import javafx.util.Pair;
-
+import com.github.junrar.Archive;
 
 
 public class archtree {
@@ -50,17 +51,15 @@ public class archtree {
     }
 
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("[0;31musage: java archtree <zipfile.zip> (only one zip supported)");
+            System.exit(-1);
+        }
         try {
-            ArrayList files;
-            Scanner scan = new Scanner(System.in);
-            System.out.println(new Scanner(System.in));
-            System.out.println("input zip file path");
-            String input = scan.nextLine();
-            ZipFile zip = new ZipFile(input);
+            ZipFile zip = new ZipFile(args[0]);
             Enumeration<? extends ZipEntry> entries = zip.entries();
             parse_folders(entries);
-
-        } catch (IOException e) {
+        } catch (IOException ezip) {
             System.out.println("Can't open file");
         }
     }
