@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/archtree.iml" filepath="$PROJECT_DIR$/archtree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Archtree.iml" filepath="$PROJECT_DIR$/Archtree.iml" />
     </modules>
   </component>
 </project>

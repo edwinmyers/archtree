@@ -3,23 +3,20 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.io.File;
-import com.github.junrar.exception.RarException;
-import com.github.junrar.impl.FileVolumeManager;
+
 import javafx.util.Pair;
-import com.github.junrar.Archive;
 
 
-public class archtree {
+public class Archtree {
 
 
-    public static Mytree parse_folders(Enumeration<? extends ZipEntry> entries){
+    public static Mytree parse_folders(Enumeration<? extends ZipEntry> entries, String zipName){
         ArrayList<String> list = new ArrayList<String>();
-        Mytree new_tree = new Mytree(new Node(".", "."));
+        Mytree new_tree = new Mytree(new Node(zipName, zipName + ":"));
         ArrayList<Pair<String, String>> new_list = new ArrayList<>();
         while (entries.hasMoreElements())
         {
             ZipEntry entry = entries.nextElement();
-            File file = new File(entry.getName());
             String name = entry.getName();
             if (!name.startsWith("_"))
             {
@@ -33,10 +30,12 @@ public class archtree {
         for (int i = 0; i < list.size(); ++i){
             String str = list.get(i);
             File file = new File(str);
-            if (str.lastIndexOf('.') != -1 && !file.isHidden())
-                new_list.add(new Pair(str.substring(str.lastIndexOf('.') + 1), str));
+            if (str.lastIndexOf('.') != -1 && (!file.isHidden()))
+                new_list.add(new Pair<String, String>(str.substring(str.lastIndexOf('.') + 1), str));
+            else if (!str.endsWith("/"))
+                new_list.add(new Pair<String, String>("", str));
             else
-                new_list.add(new Pair("", str));
+                new_list.add(new Pair<String, String>(str, str));
         }
         Collections.sort(new_list, new Comparator<Pair<String, String>>() {
             @Override
@@ -52,13 +51,14 @@ public class archtree {
 
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.out.println("[0;31musage: java archtree <zipfile.zip> (only one zip supported)");
+            System.out.println("usage: java archtree <zipfile.zip> (only one zip supported)");
             System.exit(-1);
         }
         try {
             ZipFile zip = new ZipFile(args[0]);
             Enumeration<? extends ZipEntry> entries = zip.entries();
-            parse_folders(entries);
+            String name = zip.getName();
+            parse_folders(entries, name.lastIndexOf("/") != -1 ? name.substring(name.lastIndexOf("/") + 1) : name);
         } catch (IOException ezip) {
             System.out.println("Can't open file");
         }
