@@ -11,13 +11,11 @@ public class Mytree {
     public void addElement(String elementValue) {
         String[] list = elementValue.split("/");
 
-        // latest element of the list is the filename.extrension
+        // last element of the list is the filename.extension
         root.addElement(root.incrementalPath, list);
     }
 
     public void printTree() {
-        //I move the tree common root to the current common root because I don't mind about initial folder
-        //that has only 1 child (and no leaf)
         getCommonRoot();
         commonRoot.printNode(0);
     }
@@ -27,12 +25,11 @@ public class Mytree {
             return commonRoot;
         else {
             Node current = root;
-            while ( current.leafs.size() <= 0 ) {
+            while ( current.childs.size() <= 0 ) {
                 current = current.childs.get(0);
             }
             commonRoot = current;
             return commonRoot;
         }
-
     }
 }
